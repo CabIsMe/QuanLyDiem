@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="QuanlydiemModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Quanlydiem.dbo.tblKET_QUA' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="tblKET_QUA">
+    <Key>
+      <PropertyRef Name="MaSV" />
+    </Key>
+    <Property Name="MaSV" Type="nvarchar" MaxLength="10" Nullable="false" />
+    <Property Name="HoTen" Type="nvarchar" MaxLength="50" />
+    <Property Name="MaLop" Type="nvarchar" MaxLength="10" />
+    <Property Name="DiemTongKet" Type="float" />
+    <Property Name="GhiChu" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tblKHOA">
+    <Key>
+      <PropertyRef Name="MaKhoa" />
+    </Key>
+    <Property Name="MaKhoa" Type="nvarchar" MaxLength="10" Nullable="false" />
+    <Property Name="TenKhoa" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tblLOP">
+    <Key>
+      <PropertyRef Name="MaLop" />
+    </Key>
+    <Property Name="MaKhoa" Type="nvarchar" MaxLength="10" />
+    <Property Name="MaLop" Type="nvarchar" MaxLength="10" Nullable="false" />
+    <Property Name="TenLop" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tblSINH_VIEN">
+    <Key>
+      <PropertyRef Name="MaSv" />
+    </Key>
+    <Property Name="MaSv" Type="nvarchar" MaxLength="10" Nullable="false" />
+    <Property Name="HoTen" Type="nvarchar" MaxLength="50" />
+    <Property Name="NgaySinh" Type="nvarchar" MaxLength="10" />
+    <Property Name="GioiTinh" Type="nvarchar" MaxLength="5" />
+    <Property Name="DiaChi" Type="nvarchar" MaxLength="50" />
+    <Property Name="MaLop" Type="nvarchar" MaxLength="10" />
+  </EntityType>
+  <Association Name="FK_tblKET_QUA_tblSINH_VIEN">
+    <End Role="tblSINH_VIEN" Type="Self.tblSINH_VIEN" Multiplicity="1" />
+    <End Role="tblKET_QUA" Type="Self.tblKET_QUA" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="tblSINH_VIEN">
+        <PropertyRef Name="MaSv" />
+      </Principal>
+      <Dependent Role="tblKET_QUA">
+        <PropertyRef Name="MaSV" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblLOP_tblKHOA">
+    <End Role="tblKHOA" Type="Self.tblKHOA" Multiplicity="0..1" />
+    <End Role="tblLOP" Type="Self.tblLOP" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblKHOA">
+        <PropertyRef Name="MaKhoa" />
+      </Principal>
+      <Dependent Role="tblLOP">
+        <PropertyRef Name="MaKhoa" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblSINH_VIEN_tblLOP">
+    <End Role="tblLOP" Type="Self.tblLOP" Multiplicity="0..1" />
+    <End Role="tblSINH_VIEN" Type="Self.tblSINH_VIEN" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblLOP">
+        <PropertyRef Name="MaLop" />
+      </Principal>
+      <Dependent Role="tblSINH_VIEN">
+        <PropertyRef Name="MaLop" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="QuanlydiemModelStoreContainer">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblKHOA" EntityType="Self.tblKHOA" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblLOP" EntityType="Self.tblLOP" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblSINH_VIEN" EntityType="Self.tblSINH_VIEN" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblKET_QUA" EntityType="Self.tblKET_QUA" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [tblKET_QUA].[MaSV] AS [MaSV], 
+    [tblKET_QUA].[HoTen] AS [HoTen], 
+    [tblKET_QUA].[MaLop] AS [MaLop], 
+    [tblKET_QUA].[DiemTongKet] AS [DiemTongKet], 
+    [tblKET_QUA].[GhiChu] AS [GhiChu]
+    FROM [dbo].[tblKET_QUA] AS [tblKET_QUA]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_tblKET_QUA_tblSINH_VIEN" Association="Self.FK_tblKET_QUA_tblSINH_VIEN">
+      <End Role="tblSINH_VIEN" EntitySet="tblSINH_VIEN" />
+      <End Role="tblKET_QUA" EntitySet="tblKET_QUA" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblLOP_tblKHOA" Association="Self.FK_tblLOP_tblKHOA">
+      <End Role="tblKHOA" EntitySet="tblKHOA" />
+      <End Role="tblLOP" EntitySet="tblLOP" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblSINH_VIEN_tblLOP" Association="Self.FK_tblSINH_VIEN_tblLOP">
+      <End Role="tblLOP" EntitySet="tblLOP" />
+      <End Role="tblSINH_VIEN" EntitySet="tblSINH_VIEN" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

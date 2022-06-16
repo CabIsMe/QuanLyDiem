@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="QuanlydiemModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="tblKHOA">
+    <Key>
+      <PropertyRef Name="MaKhoa" />
+    </Key>
+    <Property Name="MaKhoa" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="TenKhoa" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="tblLOPs" Relationship="Self.FK_tblLOP_tblKHOA" FromRole="tblKHOA" ToRole="tblLOP" />
+  </EntityType>
+  <EntityType Name="tblLOP">
+    <Key>
+      <PropertyRef Name="MaLop" />
+    </Key>
+    <Property Name="MaKhoa" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="MaLop" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="TenLop" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="tblKHOA" Relationship="Self.FK_tblLOP_tblKHOA" FromRole="tblLOP" ToRole="tblKHOA" />
+    <NavigationProperty Name="tblSINH_VIEN" Relationship="Self.FK_tblSINH_VIEN_tblLOP" FromRole="tblLOP" ToRole="tblSINH_VIEN" />
+  </EntityType>
+  <EntityType Name="tblSINH_VIEN">
+    <Key>
+      <PropertyRef Name="MaSv" />
+    </Key>
+    <Property Name="MaSv" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="HoTen" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="NgaySinh" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="GioiTinh" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+    <Property Name="DiaChi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="MaLop" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="tblLOP" Relationship="Self.FK_tblSINH_VIEN_tblLOP" FromRole="tblSINH_VIEN" ToRole="tblLOP" />
+    <NavigationProperty Name="tblKET_QUA" Relationship="Self.FK_tblKET_QUA_tblSINH_VIEN" FromRole="tblSINH_VIEN" ToRole="tblKET_QUA" />
+  </EntityType>
+  <EntityType Name="tblKET_QUA">
+    <Key>
+      <PropertyRef Name="MaSV" />
+    </Key>
+    <Property Name="MaSV" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="HoTen" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="MaLop" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="DiemTongKet" Type="Double" />
+    <Property Name="GhiChu" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="tblSINH_VIEN" Relationship="Self.FK_tblKET_QUA_tblSINH_VIEN" FromRole="tblKET_QUA" ToRole="tblSINH_VIEN" />
+  </EntityType>
+  <Association Name="FK_tblLOP_tblKHOA">
+    <End Role="tblKHOA" Type="Self.tblKHOA" Multiplicity="0..1" />
+    <End Role="tblLOP" Type="Self.tblLOP" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblKHOA">
+        <PropertyRef Name="MaKhoa" />
+      </Principal>
+      <Dependent Role="tblLOP">
+        <PropertyRef Name="MaKhoa" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblSINH_VIEN_tblLOP">
+    <End Role="tblLOP" Type="Self.tblLOP" Multiplicity="0..1" />
+    <End Role="tblSINH_VIEN" Type="Self.tblSINH_VIEN" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblLOP">
+        <PropertyRef Name="MaLop" />
+      </Principal>
+      <Dependent Role="tblSINH_VIEN">
+        <PropertyRef Name="MaLop" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblKET_QUA_tblSINH_VIEN">
+    <End Role="tblSINH_VIEN" Type="Self.tblSINH_VIEN" Multiplicity="1" />
+    <End Role="tblKET_QUA" Type="Self.tblKET_QUA" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="tblSINH_VIEN">
+        <PropertyRef Name="MaSv" />
+      </Principal>
+      <Dependent Role="tblKET_QUA">
+        <PropertyRef Name="MaSV" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="QuanLyDiemEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <EntitySet Name="tblKHOAs" EntityType="Self.tblKHOA" />
+    <EntitySet Name="tblLOPs" EntityType="Self.tblLOP" />
+    <EntitySet Name="tblSINH_VIEN" EntityType="Self.tblSINH_VIEN" />
+    <EntitySet Name="tblKET_QUA" EntityType="Self.tblKET_QUA" />
+    <AssociationSet Name="FK_tblLOP_tblKHOA" Association="Self.FK_tblLOP_tblKHOA">
+      <End Role="tblKHOA" EntitySet="tblKHOAs" />
+      <End Role="tblLOP" EntitySet="tblLOPs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblSINH_VIEN_tblLOP" Association="Self.FK_tblSINH_VIEN_tblLOP">
+      <End Role="tblLOP" EntitySet="tblLOPs" />
+      <End Role="tblSINH_VIEN" EntitySet="tblSINH_VIEN" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblKET_QUA_tblSINH_VIEN" Association="Self.FK_tblKET_QUA_tblSINH_VIEN">
+      <End Role="tblSINH_VIEN" EntitySet="tblSINH_VIEN" />
+      <End Role="tblKET_QUA" EntitySet="tblKET_QUA" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
